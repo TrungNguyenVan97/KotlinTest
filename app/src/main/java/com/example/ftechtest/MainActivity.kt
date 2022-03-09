@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -98,7 +99,6 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findView()
-        getListImage()
         initView()
         checkPermission()
     }
@@ -236,10 +236,10 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
     @SuppressLint("Range")
     private fun getListImage() {
         val projection = arrayOf(
-            MediaStore.Images.ImageColumns.TITLE,
-            MediaStore.Images.ImageColumns.SIZE,
-            MediaStore.Images.ImageColumns.DATA,
-            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.TITLE,
+            MediaStore.Images.Media.SIZE,
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
         )
 
         val cursor = this.contentResolver.query(
@@ -253,13 +253,13 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
             if (cursor.moveToFirst()) {
                 do {
                     val title =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.TITLE))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE))
                     val size =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.SIZE))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE))
                     val path =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
                     val bucket =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
 
                     listImage.add(Image(title, size, path, bucket))
 
@@ -267,6 +267,7 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
                 } while (cursor.moveToNext())
                 cursor.close()
                 adapter.notifyDataSetChanged()
+                Log.d("check", listImage.size.toString())
             }
         }
     }
