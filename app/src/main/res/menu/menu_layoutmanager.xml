@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_Linear"
+        android:title="Linear" />
+
+    <item
+        android:id="@+id/menu_Grind"
+        android:title="Grind">
+        <menu>
+            <item
+                android:id="@+id/menu_Grind3"
+                android:title="Grind 3 columns" />
+
+            <item
+                android:id="@+id/menu_Grind4"
+                android:title="Grind 4 columns" />
+
+            <item
+                android:id="@+id/menu_Grind5"
+                android:title="Grind 5 columns" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_Album"
+        android:title="Album" />
+</menu>
