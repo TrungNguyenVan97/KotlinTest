@@ -2,7 +2,7 @@ package com.example.ftechtest
 
 import android.app.WallpaperManager
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -11,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.Glide
 
 class DetailsActivity : AppCompatActivity() {
@@ -50,11 +51,11 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun setBackGround() {
         wallPaper = WallpaperManager.getInstance(this)
-        val bitmap = BitmapFactory.decodeFile(image.path)
+        val bitmap: Bitmap = ivImage.drawable.toBitmap()
         try {
             wallPaper.setBitmap(bitmap)
         } catch (e: Exception) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
     }
 
