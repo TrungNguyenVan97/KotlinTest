@@ -36,7 +36,7 @@ class AlbumActivity : AppCompatActivity(), AlbumAdapter.ICallBack {
     }
 
     private fun getTitleAlbum() {
-        listAlbum.addAll(MainActivity.listAlbum)
+        listAlbum.addAll(MainActivity.listBucket)
     }
 
 

@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
         var checkedLayoutManager = 1
         var isCheckRotation = false
         var isCheckShowFolder = false
-        var listAlbum: ArrayList<String> = arrayListOf()
+        var listBucket: ArrayList<String> = arrayListOf()
     }
 
     private val activityResult =
@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
             } else {
                 intent.putExtra(SEND_DATA_TO_DETAILS, listImage[position])
             }
-
             startActivity(intent)
         } else {
             val image: Image = if (isCheckShowFolder) {
@@ -264,8 +263,8 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
                         cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
 
                     listImage.add(Image(title, size, path, bucket))
-                    addAlbum(bucket)
 
+                    addAlbum(bucket)
                 } while (cursor.moveToNext())
                 cursor.close()
                 adapter.notifyDataSetChanged()
@@ -274,13 +273,13 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
     }
 
     private fun addAlbum(bucket: String) {
-        if (listAlbum.isEmpty()) {
-            listAlbum.add(bucket)
+        if (listBucket.isEmpty()) {
+            listBucket.add(bucket)
         } else {
-            if (bucket in listAlbum) {
+            if (bucket in listBucket) {
                 return
             } else {
-                listAlbum.add(bucket)
+                listBucket.add(bucket)
             }
         }
     }
