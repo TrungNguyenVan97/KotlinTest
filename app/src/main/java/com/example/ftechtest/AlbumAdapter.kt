@@ -3,7 +3,7 @@ package com.example.ftechtest
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -29,10 +29,10 @@ class AlbumAdapter(
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var tvTitle: TextView = itemView.findViewById(R.id.tv_Title_Album)
-        private var layout: LinearLayout? = itemView.findViewById(R.id.layout_Album)
+        private var ivFolder: ImageView = itemView.findViewById(R.id.iv_Folder_Album)
 
         init {
-            layout?.setOnClickListener {
+            ivFolder.setOnClickListener {
                 callBack?.onClick(adapterPosition)
             }
         }

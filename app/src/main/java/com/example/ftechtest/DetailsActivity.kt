@@ -49,9 +49,9 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun setBackGround() {
+        wallPaper = WallpaperManager.getInstance(this)
+        val bitmap = BitmapFactory.decodeFile(image.path)
         try {
-            wallPaper = WallpaperManager.getInstance(baseContext)
-            val bitmap = BitmapFactory.decodeFile(image.path)
             wallPaper.setBitmap(bitmap)
         } catch (e: Exception) {
             e.printStackTrace();
@@ -65,7 +65,6 @@ class DetailsActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         startActivity(Intent.createChooser(intent, "share"))
     }
-
 
     private fun initAction() {
         ivBack.setOnClickListener {

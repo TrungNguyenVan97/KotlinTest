@@ -124,7 +124,6 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
                 rvImage.layoutManager = grind3ColumnsLayoutManager
                 checkedLayoutManager = 3
             }
-
             R.id.menu_Grind4 -> {
                 rvImage.layoutManager = grind4ColumnsLayoutManager
                 checkedLayoutManager = 4
