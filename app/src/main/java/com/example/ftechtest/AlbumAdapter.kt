@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class AlbumAdapter(
-    private val list: ArrayList<Album>,
-    private var callBack: ImageAdapter.ICallBack?
+    private val list: ArrayList<String>,
+    private var callBack: ICallBack?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -21,7 +21,7 @@ class AlbumAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is Holder) {
-            holder.tvTitle.text = list[position].titleAlbum
+            holder.tvTitle.text = list[position]
         }
     }
 

@@ -70,7 +70,7 @@ class DetailsActivity : AppCompatActivity() {
         ivBack.setOnClickListener {
             onBackPressed()
         }
-        cbLike.setOnCheckedChangeListener { buttonView, isChecked ->
+        cbLike.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
                     listFavorite.add(image)

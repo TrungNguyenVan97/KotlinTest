@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
     private lateinit var tvRotationSize: TextView
     private lateinit var ivRotationImage: ImageView
     private val listImage: ArrayList<Image> = arrayListOf()
+    private val listFolder: ArrayList<Image> = arrayListOf()
     private var adapter = ImageAdapter(listImage, this, this)
     private val grind3ColumnsLayoutManager: RecyclerView.LayoutManager by lazy {
         GridLayoutManager(
@@ -67,6 +69,29 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
         const val SEND_DATA_TO_DETAILS = "SEND_DATA_TO_DETAILS"
         var checkedLayoutManager = 1
         var isCheckRotation = false
+        var isCheckShowFolder = false
+        var listAlbum: ArrayList<String> = arrayListOf()
+    }
+
+    private val activityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val intent = result.data
+                val nameFolder = intent?.getStringExtra(AlbumActivity.SEND_DATA_TO_MAIN)
+                showImageOfFolder(nameFolder.toString())
+                isCheckShowFolder = true
+            }
+        }
+
+    private fun showImageOfFolder(nameFolder: String) {
+        listFolder.clear()
+        for (i in 0 until listImage.size) {
+            if (nameFolder == listImage[i].bucket) {
+                listFolder.add(listImage[i])
+            }
+        }
+        adapter = ImageAdapter(listFolder, this, this)
+        rvImage.adapter = adapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,10 +118,19 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
     override fun onClick(position: Int) {
         if (!isCheckRotation) {
             val intent = Intent(this, DetailsActivity::class.java)
-            intent.putExtra(SEND_DATA_TO_DETAILS, listImage[position])
+            if (isCheckShowFolder) {
+                intent.putExtra(SEND_DATA_TO_DETAILS, listFolder[position])
+            } else {
+                intent.putExtra(SEND_DATA_TO_DETAILS, listImage[position])
+            }
+
             startActivity(intent)
         } else {
-            val image = listImage[position]
+            val image: Image = if (isCheckShowFolder) {
+                listFolder[position]
+            } else {
+                listImage[position]
+            }
             tvRotationTitle.text = "Title: ${image.title} "
             tvRotationPath.text = "Path: ${image.path}"
             tvRotationSize.text = "Size: ${image.size.toDouble() / 1000} KB"
@@ -133,8 +167,8 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
                 checkedLayoutManager = 5
             }
             R.id.menu_Album -> {
-                intent = Intent(this, AlbumActivity::class.java)
-                startActivity(intent)
+                val intent = Intent(this, AlbumActivity::class.java)
+                activityResult.launch(intent)
             }
         }
         rvImage.adapter = adapter
@@ -204,9 +238,10 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
     @SuppressLint("Range")
     private fun getListImage() {
         val projection = arrayOf(
-            MediaStore.Images.Media.TITLE,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.DATA
+            MediaStore.Images.ImageColumns.TITLE,
+            MediaStore.Images.ImageColumns.SIZE,
+            MediaStore.Images.ImageColumns.DATA,
+            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
         )
 
         val cursor = this.contentResolver.query(
@@ -220,17 +255,38 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
             if (cursor.moveToFirst()) {
                 do {
                     val title =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.TITLE))
                     val size =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE))
-                    val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.SIZE))
+                    val path =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA))
+                    val bucket =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
 
-                    listImage.add(Image(title, size, path))
+                    listImage.add(Image(title, size, path, bucket))
+                    addAlbum(bucket)
 
                 } while (cursor.moveToNext())
                 cursor.close()
                 adapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun addAlbum(bucket: String) {
+        if (listAlbum.isEmpty()) {
+            listAlbum.add(bucket)
+        } else {
+            if (bucket in listAlbum) {
+                return
+            } else {
+                listAlbum.add(bucket)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isCheckShowFolder = false
     }
 }
