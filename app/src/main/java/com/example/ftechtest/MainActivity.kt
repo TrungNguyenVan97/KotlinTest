@@ -111,7 +111,6 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             isCheckRotation = false
             layoutRotation.visibility = View.GONE
-            checkLayoutManager()
         }
     }
 
