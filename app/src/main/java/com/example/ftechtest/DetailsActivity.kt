@@ -89,7 +89,9 @@ class DetailsActivity : AppCompatActivity() {
         image = intent.getSerializableExtra(MainActivity.SEND_DATA_TO_DETAILS) as Image
         tvTitle.text = "Title: ${image.title} "
         tvPath.text = "Path: ${image.path}"
-        tvSize.text = "Size: ${image.size.toDouble() / 1000} KB"
+        image.size?.let {
+            tvSize.text = "Size: ${it.toDouble() / 1000} KB"
+        }
         Glide.with(this).load(image.path).fitCenter().into(ivImage)
         cbLike.isChecked = image in listFavorite
     }

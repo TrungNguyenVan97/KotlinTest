@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -131,7 +130,9 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
             }
             tvRotationTitle.text = "Title: ${image.title} "
             tvRotationPath.text = "Path: ${image.path}"
-            tvRotationSize.text = "Size: ${image.size.toDouble() / 1000} KB"
+            image.size?.let {
+                tvRotationSize.text = "Size: ${it.toDouble() / 1000} KB"
+            }
             Glide.with(this).load(image.path).fitCenter().into(ivRotationImage)
         }
     }
@@ -267,7 +268,6 @@ class MainActivity : AppCompatActivity(), ImageAdapter.ICallBack {
                 } while (cursor.moveToNext())
                 cursor.close()
                 adapter.notifyDataSetChanged()
-                Log.d("check", listImage.size.toString())
             }
         }
     }

@@ -35,10 +35,16 @@ class ImageAdapter(
         if (holder is LinearHolder) {
             Glide.with(context).load(list[position].path).centerInside().into(holder.ivImage)
 
-            holder.tvSize.text = "Size: ${list[position].size.toDouble() / 1000} KB"
+            list[position].size?.let {
+                holder.tvSize.text = "Size: ${it.toDouble() / 1000} KB"
+            }
             val title = list[position].path
-            val index = title.lastIndexOf('/')
-            holder.tvTitle.text = "Full Title: ${title.substring(index + 1)}"
+            val index = title?.lastIndexOf('/')
+            if (title != null) {
+                if (index != null) {
+                    holder.tvTitle.text = "Full Title: ${title.substring(index + 1)}"
+                }
+            }
         }
         if (holder is GrindHolder) {
             Glide.with(context).load(list[position].path).centerCrop().into(holder.ivGrindImage)
